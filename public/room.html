@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scrum Poker — Room</title>
+  <link rel="stylesheet" href="/css/terminal.css" />
+</head>
+<body>
+  <div class="term-container">
+    <!-- Status Bar -->
+    <div class="term-status-bar">
+      <span><a href="/">scrum-poker</a> / room:<span id="room-id-display"></span></span>
+      <span id="connection-status">connecting...</span>
+    </div>
+
+    <div class="term-main">
+      <!-- Room Link (shown to creator) -->
+      <div class="room-link-box" id="room-link-box" style="display: none;">
+        <span class="term-dim">[link]</span>
+        <span class="link-url" id="room-link-url"></span>
+        <button class="term-btn" id="btn-copy-link" style="padding: 0.25ch 1ch; font-size: 0.85em;">[copy]</button>
+      </div>
+
+      <div class="room-grid">
+        <div class="room-left">
+          <!-- Topic -->
+          <div class="topic-bar" id="topic-bar">
+            <span class="term-dim">[topic]</span>
+            <input
+              type="text"
+              class="term-input"
+              id="topic-input"
+              placeholder="set story / topic..."
+              maxlength="120"
+              style="display: none;"
+            />
+            <span class="topic-display" id="topic-display">No topic set</span>
+          </div>
+
+          <!-- Voting Cards -->
+          <div class="vote-section" id="vote-section">
+            <div class="term-heading">
+              <span class="term-dim">&gt;</span> Cast your vote
+            </div>
+            <div class="vote-cards" id="vote-cards"></div>
+          </div>
+
+          <!-- Creator Controls -->
+          <div class="controls" id="creator-controls" style="display: none;">
+            <button class="term-btn term-btn-yellow" id="btn-reveal">
+              [*] Reveal Votes
+            </button>
+            <button class="term-btn term-btn-danger" id="btn-clear">
+              [x] Clear / Next
+            </button>
+          </div>
+
+          <!-- Stats (shown after reveal) -->
+          <div id="stats-panel" style="display: none;">
+            <div class="stats-box">
+              <div class="stats-title">=== Results ===</div>
+              <div class="stats-row">
+                <span class="stat-label">Average</span>
+                <span class="stat-value" id="stat-average">-</span>
+              </div>
+              <div class="stats-row">
+                <span class="stat-label">Median</span>
+                <span class="stat-value" id="stat-median">-</span>
+              </div>
+              <div class="stats-row">
+                <span class="stat-label">Range</span>
+                <span class="stat-value" id="stat-range">-</span>
+              </div>
+              <div class="stats-row">
+                <span class="stat-label">Consensus</span>
+                <span class="stat-value" id="stat-consensus">-</span>
+              </div>
+              <div class="stats-row">
+                <span class="stat-label">Voted</span>
+                <span class="stat-value" id="stat-voted">-</span>
+              </div>
+            </div>
+
+            <!-- Vote distribution -->
+            <div class="vote-distribution" id="vote-distribution"></div>
+          </div>
+
+          <!-- Participants Table -->
+          <div class="participants-section">
+            <div class="term-heading">
+              <span class="term-dim">&gt;</span> Participants
+              <span class="term-dim" id="participant-count"></span>
+            </div>
+            <table class="participant-list">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Status</th>
+                  <th>Vote</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="participant-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+          <!-- Voting Scheme -->
+          <div class="sidebar-section">
+            <div class="sidebar-section-title">[scheme]</div>
+            <div class="scheme-selector" id="scheme-selector">
+              <button class="scheme-btn active" data-scheme="fibonacci">Fibonacci</button>
+              <button class="scheme-btn" data-scheme="tshirt">T-Shirt</button>
+              <button class="scheme-btn" data-scheme="powers">Powers of 2</button>
+              <button class="scheme-btn" data-scheme="sequential">1-10</button>
+            </div>
+          </div>
+
+          <!-- Timer -->
+          <div class="sidebar-section">
+            <div class="sidebar-section-title">[timer]</div>
+            <div class="timer-display" id="timer-display">--:--</div>
+            <div style="display: flex; gap: 0.5ch; flex-wrap: wrap;">
+              <button class="term-btn" id="btn-timer-1" style="padding: 0.25ch 1ch; font-size: 0.85em;">1m</button>
+              <button class="term-btn" id="btn-timer-2" style="padding: 0.25ch 1ch; font-size: 0.85em;">2m</button>
+              <button class="term-btn" id="btn-timer-3" style="padding: 0.25ch 1ch; font-size: 0.85em;">3m</button>
+              <button class="term-btn" id="btn-timer-5" style="padding: 0.25ch 1ch; font-size: 0.85em;">5m</button>
+              <button class="term-btn term-btn-danger" id="btn-timer-stop" style="padding: 0.25ch 1ch; font-size: 0.85em;">stop</button>
+            </div>
+          </div>
+
+          <!-- History -->
+          <div class="sidebar-section">
+            <div class="sidebar-section-title">[history]</div>
+            <div id="history-list">
+              <div class="empty-state">No rounds yet</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="term-footer">
+      <span id="footer-status">connected</span>
+      <span class="term-dim" id="footer-info"></span>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/room.js"></script>
+</body>
+</html>
